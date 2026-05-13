@@ -1,20 +1,43 @@
 'use client';
 
-import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
+const THEME_STORAGE_KEY = 'extensions-manager-theme';
+
+type Theme = 'light' | 'dark';
+
 const ToggleThemeButton = () => {
-  const { theme, setTheme } = useTheme();
+  const [theme, setTheme] = useState<Theme>('light');
   const [mounted, setMounted] = useState(false);
 
-  const handleToggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  };
-
   useEffect(() => {
+    const root = document.documentElement;
+    const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
+
+    if (savedTheme === 'dark' || savedTheme === 'light') {
+      setTheme(savedTheme);
+      root.setAttribute('data-theme', savedTheme);
+      setMounted(true);
+      return;
+    }
+
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme: Theme = prefersDark ? 'dark' : 'light';
+    setTheme(initialTheme);
+    root.setAttribute('data-theme', initialTheme);
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    document.documentElement.setAttribute('data-theme', theme);
+    window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+  }, [theme, mounted]);
+
+  const handleToggleTheme = () => {
+    setTheme((current) => (current === 'dark' ? 'light' : 'dark'));
+  };
 
   if (!mounted) return null;
 
