@@ -172,4 +172,4 @@ After building, the static output is generated in the `out/` directory.
 
 - Name - Rafi Zaman
 - Frontend Mentor - [@rafi983](https://www.frontendmentor.io/profile/rafi983)
-- GitHub - [rafi983](https://github.com/rafi983/Browser-extensions-manager)
+- GitHub - [rafi983](https://github.com/rafi983/Browser-extension-manager)
